@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Recommendation</title>
+   
+
+
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 20px;
+        }
+
+        .form-container, .result-container {
+            width: 45%;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            margin-right: 5%;
+        }
+
+        .result-container h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Form styles */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        form select, form input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        form input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Result styles */
+        #result-text {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center; color: #333;">Home Recommendation</h1>
+    <p style="font-weight: bold; color: #333; margin-left: 50px;" >Having trouble deciding where to live? Get an idea by entering your preferences.</p>
+    <p style="font-weight: bold; color: #333; margin-left: 50px;" >Start here to see how people with similar preferences live.</p>
+
+    <div class="container">
+        <div class="form-container">
+            <form method="post" action="{% url 'idea' %}" id="idea-form">
+                {% csrf_token %}
+
+                <label for="kisi">Number of People:</label>
+                <input type="number" name="kisi" min="1" required>
+
+                <label for="araba">Do you have a car?:</label>
+                <select name="araba" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+
+                <label for="yukseklik">Do you have a fear of heights?:</label>
+                <select name="yukseklik" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+
+                <label for="yüzme">Do you like swimming?:</label>
+                <select name="yukseklik" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+
+                <input type="submit" value="Recommend" id="submit-btn">
+            </form>
+        </div>
+
+        <div class="result-container" id="prediction-result">
+            <h2>Home Recommendation</h2>
+            <p id="result-text">Result will appear here.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('idea-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var form = event.target;
+            var formData = new FormData(form);
+
+            fetch('{% url "idea" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('result-text').textContent = data;
+                
+                document.getElementById('result-text').insertAdjacentHTML('afterend', message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

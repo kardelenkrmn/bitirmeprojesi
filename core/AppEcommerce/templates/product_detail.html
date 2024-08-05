@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+
+{% block extracss %}
+      <style>
+        .swiper {
+          width: 100%;
+          height: 300px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+    
+        .swiper-slide {
+          background-size: cover;
+          background-position: center;
+        }
+    
+        .mySwiper2 {
+          height: 80%;
+          width: 100%;
+        }
+    
+        .mySwiper {
+          height: 20%;
+          box-sizing: border-box;
+          padding: 10px 0;
+        }
+    
+        .mySwiper .swiper-slide {
+          width: 25%;
+          height: 100%;
+          opacity: 0.4;
+        }
+    
+        .mySwiper .swiper-slide-thumb-active {
+          opacity: 1;
+        }
+    
+        .swiper-slide img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      </style>
+{% endblock extracss %}
+{% block content %}
+    <div class="container" style="padding: 150px 0;">
+        <div class="row d-flex justify-content-center align-items-center" >
+            <div class="col-8">
+                <div class="card" style="width: 100%;">
+
+                  
+  <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper mySwiper2">
+    <div class="swiper-wrapper">
+      
+      {% for product_image in product_images %}
+      <div class="swiper-slide">
+        <img src="{{product_image.image.url}}" />
+      </div>
+      {% endfor %}
+        
+
+                  </div>
+                  <div class="swiper-button-next"></div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+                <div thumbsSlider="" class="swiper mySwiper">
+                  <div class="swiper-wrapper">
+                    {% for product_image in product_images %}
+                    <div class="swiper-slide">
+                      <img src="{{product_image.image.url}}" />
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                    
+                </div>
+            </div>
+
+
+            <div class="col-12">
+              <div class="card" style="width: 100%;">
+                <div class="card-header">
+                  <h3>Home Description</h3>
+              </div>
+                  <div class="card-body">
+                                  <p class="card-text">{{product.description}}     </p>
+                                  <hr>
+                                  <h4>House Features</h4>
+                                  <ul class="list-group list-group-flush">
+                                      <li class="list-group-item"><strong>Type: </strong> {{ product.brand}}</li>
+                                      <li class="list-group-item"><strong>Status: </strong> {{ product.durum}}</li>
+                                      <li class="list-group-item"><strong>Location: </strong> {{ product.location }}</li>
+                                      <li class="list-group-item"><strong>Address: </strong> {{ product.adres }}</li>
+                                      <li class="list-group-item"><strong>Price: </strong> {{ product.price|intcomma }}   TL</li>
+                                      <li class="list-group-item"><strong>Number of rooms: </strong> {{ product.room_number }}</li>
+                                      <li class="list-group-item"><strong>m²: </strong> {{ product.metre}}</li>
+                                      <li class="list-group-item"><strong>Number of floors: </strong>{{ product.kat_sayısı}}</li>
+                                      
+                                      {% if product.asansor %}
+                                      <li class="list-group-item"><strong>Elevator: </strong> YES </li>
+                                      {% else %}
+                                      <li class="list-group-item"><strong>Elevator: </strong> NO</li>
+                                      {% endif %}
+
+                                      {% if product.güvenlik %}
+                                      <li class="list-group-item"><strong>Security: </strong> YES </li>
+                                      {% else %}
+                                      <li class="list-group-item"><strong>Security: </strong> NO</li>
+                                      {% endif %}
+
+                                      {% if product.otopark %}
+                                      <li class="list-group-item"><strong>Car Parking: </strong> YES</li>
+                                      {% else %}
+                                      <li class="list-group-item"><strong>Car Parking: </strong> NO </li>
+                                      {% endif %}
+
+                                      {% if product.havuz %}
+                                      <li class="list-group-item"><strong>Pool: </strong> YES</li>
+                                      {% else %}
+                                      <li class="list-group-item"><strong>Pool: </strong> NO </li>
+                                      {% endif %}
+                                        
+
+                                     
+                                  </ul>
+
+                    <form method="post">
+                      {% csrf_token %}
+
+                      <div class="d-flex justify-content-between">
+                          <input type="hidden" value="{{ product.id }}" name="product_id">
+                          <form method="post">
+                            {% csrf_token %}
+                            
+                            <!-- favorilerin içinde girişli kullanıcı var mı onu kontrol ediyor. -->
+                            {% if request.user in product.favori.all %}
+                            <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                              <i class="fa-solid fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </button>
+                            {% else %}
+                            
+                            {% if request.user.is_authenticated %}
+                            <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                              <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </button>
+                          {% else %}
+                          <a href="{% url 'login' %}" type="button" class="position-absolute top-0 end-0 btn" data-product-id="{{ product.id }}">
+                            <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </a>
+                            {% endif %}
+                              
+                            
+                            {% endif %}
+                              
+  
+  
+  
+                        </form>
+                      </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12">
+              <div class="card" style="width: 100%;">
+                <div class="card-header">
+                  <h3>Details of the person who loaded the house </h3>
+              </div>
+                  <div class="card-body">
+                                  <ul class="list-group list-group-flush">
+                                      <li class="list-group-item"><strong>Name Surname: </strong> {{ profil.user.first_name }} {{profil.user.last_name}}</li>
+                                      <li class="list-group-item"><strong>Contact: </strong> {{ profil.phone_number }}</li>               
+                                  </ul>
+
+
+                      </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div class="col-12">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24457.20757217526!2d32.864853200000006!3d39.982731949999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34d3f96365fdf%3A0x2792c30ec5740004!2sFixGross!5e0!3m2!1str!2str!4v1717093604446!5m2!1str!2str" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+            </div> -->
+
+
+        </div>
+        <div class="row">
+            <div class="col">
+              <form method="post">
+                {% csrf_token %}                
+                    <section style="background-color: #eee;">
+                        <div class="container my-5 py-5">
+                          <div class="row d-flex justify-content-center">
+                            <div class="col-md-12 col-lg-10 col-xl-8">
+                              {% if comments  %}
+                              <div class="card">
+
+                               
+                                  
+                                
+                                {% for comment in comments %}
+
+                                <div class="card-body position-relative">
+                                  <div class="d-flex flex-start align-items-center">
+                                    <div>
+                                      <h6 class="fw-bold text-primary mb-1">{{ comment.first_name }} {{ comment.last_name }}</h6>
+                                      <p class="text-muted small mb-0">
+                                        {{ comment.create_date }}
+                                      </p>
+                                    </div>
+                                  </div>
+                      
+                                  <p class="mt-3 mb-4 pb-2">
+                                    {{ comment.comment }}
+                                  </p>
+                                  <button type="button" class="btn btn-primary position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <i class="fa-solid fa-pencil"></i>
+                                  </button>
+                                  <!-- Modal yorum güncelleme -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Yorum Düzenle</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <div class="card-footer py-3 border-top-1 mt-3" style="background-color: #f8f9fa;">
+                                              <div class="d-flex flex-start w-100">
+                                                <div class="form-outline w-100">
+                                                  <textarea class="form-control" id="textAreaExample" rows="4"
+                                                    style="background: #fff;" name="comment" required>{{ comment.comment }}</textarea>
+                                                  <label class="form-label" for="textAreaExample">{% trans '' %}</label>
+                                                </div>
+                                              </div>
+                                              <div class="float-end mt-2 pt-1">
+                                                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                                <button type="submit" class="btn btn-primary btn-sm" name="submit" value="commentupdate">{% trans 'Comment' %}</button>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <p>You can write your comments about the house here. </p>
+
+                                {% endif %}
+                                
+                                {% if comment_user is None %}
+
+                                <div class="card-footer py-3 border-top-1 mt-3" style="background-color: #f8f9fa;">
+                                  <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                      <label class="form-label" for="textAreaExample">{% trans 'Leave a comment : ' %}</label>
+                                      <textarea class="form-control" id="textAreaExample" rows="4"
+                                        style="background: #fff;" name="comment"  required></textarea>
+                                      
+                                    </div>
+                                  </div>
+                                  <div class="float-end mt-2 pt-1">
+                                    <button type="submit" class="btn btn-primary btn-sm" name="submit" value="btncomment">{% trans 'Comment' %}</button>
+                                  </div>
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+              </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+    
+
+
+{% block extrajs %}
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper(".mySwiper", {
+      loop: true,
+      spaceBetween: 10,
+      slidesPerView: 4,
+      freeMode: true,
+      watchSlidesProgress: true,
+    });
+    var swiper2 = new Swiper(".mySwiper2", {
+      loop: true,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      thumbs: {
+        swiper: swiper,
+      },
+    });
+  </script>
+{% endblock extrajs %}
+  
+  

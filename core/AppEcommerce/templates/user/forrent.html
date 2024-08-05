@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+
+{% block content %}
+
+<hr>
+<div class="container">
+    <h1 class="page-heading mb-0">Houses For Rent </h1>
+</div>
+<br>
+
+<div id="tab-2" class="tab-pane fade show p-0">
+    <div class="row g-4">
+      
+        {% for product in products %}
+        
+            {% if product.durum == "kiralık" %}
+              
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                        <a href=""><img class="img-fluid" src="{{ product.image.url }}" alt=""></a>
+                        <a class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3" href="{% url 'product_detail' product.id %}">detaya git</a>
+                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ product.brand }}</div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <!-- favorilerin içinde girişli kullanıcı var mı onu kontrol ediyor. -->
+                            {% if request.user in product.favori.all %}
+                            <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                              <i class="fa-solid fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </button>
+                            {% else %}
+                            
+                            {% if request.user.is_authenticated %}
+                            <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                              <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </button>
+                          {% else %}
+                          <a href="{% url 'login' %}" type="button" class="position-absolute top-0 end-0 btn" data-product-id="{{ product.id }}">
+                            <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </a>
+                            {% endif %}
+                              
+                            
+                            {% endif %}
+                              
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            {% endif %}
+        
+        {% endfor %}
+      
+    </div>
+</div>
+
+<div class="row">
+    <!-- PAGİNATİON  sayfa geçmeleri 1 2 3 her sayfada şu kdr ev olsun fln -->
+<nav aria-label="..." class="d-flex justify-content-center mt-5">
+    <ul class="pagination">
+        
+        {% if products.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ products.previous_page_number }}">{% trans 'Geri' %}</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="?page={{ products.number|add:'-1' }}">{{ products.number|add:'-1' }}</a></li>
+            
+        {% endif %}
+            
+
+      <li class="page-item active" aria-current="page">
+        <a class="page-link" href="?page={{ products.number }}">{{ products.number }}</a>
+      </li>
+      
+      {% if products.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ products.number|add:'1' }}">{{ products.number|add:'1' }}</a></li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ products.next_page_number }}">{% trans 'İleri' %}</a>
+      </li>
+        
+      {% endif %}
+        
+    </ul>
+  </nav>
+</div>
+</div>
+</div>
+</div>
+{% endblock content %}
+
+
+

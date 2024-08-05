@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+
+{% block extracss %}
+    <style>
+        .question {
+            display: none;
+            animation: fade-in 0.5s ease;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center; /* İçeriği ortalar */
+        }
+        .question.active {
+            display: block;
+        }
+        .filter-button {
+            background-color: transparent;
+            border: none;
+            color: #007bff;
+            font-size: 24px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .filter-button:hover {
+            color: #0056b3;
+        }
+        .filter-button.btn-success {
+            color: #28a745;
+        }
+        .filter-button.btn-danger {
+            color: #dc3545;
+        }
+        .form-select, #durum, #havuz, #city, [name="person"], [name="securty"], [name="car"], [name="animal"], [name="ulasim_arac_yakinlik"],  [name="Yükseklik_korkusu"] {
+            font-size: 1.25rem; /* Yazı boyutunu artırır */
+            padding: 3px; /* İçeriği artırır */
+            width: 100%; /* Genişliği tam genişlik yapar */
+            max-width: 600px; /* Maksimum genişlik belirler */
+            box-sizing: border-box; /* Padding ve border genişliğini dahil eder */
+            margin: 0 auto; /* Ortalar */
+        }
+        .card {
+            max-width: 1000px; /* Maksimum genişlik belirler */
+            margin: 0 auto; /* Ortalar */
+        }
+
+    </style>
+{% endblock extracss %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center align-items-center my-3">
+                <a href="{% url 'idea' %}" class="btn btn-success ms-3">
+                    Do you need more ideas when looking for a house? <br> &#x1F914;
+                </a>
+
+        
+            </div>
+            <div class="col-12" style="padding: 0 220px;">
+                <form>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="question-container1" class="question-container">
+                                <div class="question active" id="question-0">
+                                    <h2>Would you prefer a city with or without the sea? </h2>
+                                    <select class="form-select" name="city" id="city">
+                                        <option value="">Select</option>
+                                        <option value="ankara">Ankara</option>
+                                        <option value="istanbul">İstanbul</option>
+                                    </select>
+                                </div>
+                                <div class="question" id="question-1">
+                                    <h2>Do you prefer a house for sale or a house for rent ?</h2>
+                                    <select class="form-select" name="durum" id="durum">
+                                        <option value="">Select</option>
+                                        <option value="Sale">Sale</option>
+                                        <option value="Rent">Rent</option>
+                                    </select>
+                                </div>
+                                <div class="question" id="question-2">
+                                    <h2> Do you like swimming?</h2>
+                                    <select  id="havuz" name="havuz">
+                                        <option  value="">Select</option>
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+                                </div>
+                                <div class="question" id="question-3">
+                                    <h2>Are you afraid of heights?</h2>
+                                    <select name="Yükseklik_korkusu">
+                                        <option value="">Select</option>
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+                                </div>
+                                <!-- Devam eden sorular -->
+                                <div class="question" id="question-4">
+                                    <h2> How many people do you live with?</h2>
+                                    <select name="person" >
+                                    <option value="">Select</option>
+                                    <option value="1-2">1-2</option>
+                                    <option value="3-4">3-4</option>
+                                    <option value="5">5+</option>
+                                    </select>
+                                </div>
+                                <div class="question" id="question-5">
+                                    <h2>Do you care about security?</h2>
+                                    <select name="securty">
+                                        <option value="">Select</option>
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+                                </div>
+                                <div class="question" id="question-6">
+                                    <h2> Do you have a car?</h2>
+                                    <select name="car">
+                                        <option value="">Select</option>
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+                                </div>
+                                <div class="question" id="question-7">
+                                    <h2> Do you have a pet?</h2>
+                                    <select name="animal">
+                                        <option value="">Select</option>
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+                                </div>
+                                <div class="question" id="question-8">
+                                    <h2>Is proximity to transport important?</h2>
+                                    <select name="ulasim_arac_yakinlik">
+                                        <option value="">Select</option>
+                                        <option value="evet">Yes</option>
+                                        <option value="hayir">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="my-3" style="text-align: center;">
+                                {% comment %} <button class="filter-button" type="button" onclick="showPreviousQuestion()">&#8592;</button> {% endcomment %}
+                                <button class="filter-button" type="button" id="nextquestion"  onclick="showNextQuestion()">&#8594;</button>
+                                <button class="filter-button btn-success" type="submit" onclick="filterResults()">Filter</button>
+                                <a href="{% url 'category' %}" class="filter-button btn-danger" onclick="clearFilters()">Clear</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12" style="margin-top: 50px;">
+                
+                {% if  query %}
+                <p style="font-weight: bold; margin-left:  20px; color: #333; font-size: 18px;"> " {{query}} " THE HOUSES RELATED TO THE WORD ARE BELOW.</p>
+                    
+                {% endif %}
+                    
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-4 mb-4">
+                        <div class="card position-relative" style="width: 100%;">
+                            <a href="{% url 'product_detail' product.id %}"><img src="{{ product.image.url }}" style="height: 400px;" class="card-img-top" alt="..."></a>
+                            <div class="card-body">
+                                <a class="d-block h5 mb-2" href="">{{product.title}}</a>
+                                <h5 class="card-title">{{ product.brand }}</h5>
+                                
+                                <p class="card-text text-dark">{{ product.model }}</p>
+                                <p class="card-text text-dark">{{ product.price|intcomma }} TL</p>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Details</a>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ product.id }}" name="product_id">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            {% if request.user in product.favori.all %}
+                                            <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                                                <i class="fa-solid fa-heart fs-5" id="heart{{ product.id }}"></i>
+                                                </button>
+                                                {% else %}
+                                                {% if request.user.is_authenticated %}
+                                                <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                                                <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                                                </button>
+                                                {% else %}
+                                                <a href="{% url 'login' %}" type="button" class="position-absolute top-0 end-0 btn" data-product-id="{{ product.id }}">
+                                                <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                                                </a>
+                                                {% endif %}
+                                                {% endif %}
+                                                </form>
+                                                </form>
+                                                </div>
+                                                </div>
+                                                </div>
+                                                </div>
+                                                {% endfor %}
+                                                </div>
+                                                <div class="row">
+                                                <nav aria-label="..." class="d-flex justify-content-center mt-5">
+                                                    
+                                                    {% if query %}
+                                                    <ul class="pagination">
+                                                        {% if products.has_previous %}
+                                                        <li class="page-item">
+                                                        <a class="page-link" href="?query={{query}}&page={{ products.previous_page_number }}">{% trans 'Geri' %}</a>
+                                                        </li>
+                                                        <li class="page-item"><a class="page-link" href="?query={{query}}&page={{ products.number|add:'-1' }}">{{ products.number|add:'-1' }}</a></li>
+                                                        {% endif %}
+                                                        <li class="page-item active" aria-current="page">
+                                                        <a class="page-link" href="?query={{query}}&page={{ products.number }}">{{ products.number }}</a>
+                                                        </li>
+                                                        {% if products.has_next %}
+                                                        <li class="page-item"><a class="page-link" href="?query={{query}}&page={{ products.number|add:'1' }}">{{ products.number|add:'1' }}</a></li>
+                                                        <li class="page-item">
+                                                        <a class="page-link" href="?query={{query}}&page={{ products.next_page_number }}">{% trans 'İleri' %}</a>
+                                                        </li>
+                                                        {% endif %}
+                                                        </ul>
+
+
+                                                        {% else %}
+                                                        <ul class="pagination">
+                                                            {% if products.has_previous %}
+                                                            <li class="page-item">
+                                                            <a class="page-link" href="?page={{ products.previous_page_number }}">{% trans 'Geri' %}</a>
+                                                            </li>
+                                                            <li class="page-item"><a class="page-link" href="?page={{ products.number|add:'-1' }}">{{ products.number|add:'-1' }}</a></li>
+                                                            {% endif %}
+                                                            <li class="page-item active" aria-current="page">
+                                                            <a class="page-link" href="?page={{ products.number }}">{{ products.number }}</a>
+                                                            </li>
+                                                            {% if products.has_next %}
+                                                            <li class="page-item"><a class="page-link" href="?page={{ products.number|add:'1' }}">{{ products.number|add:'1' }}</a></li>
+                                                            <li class="page-item">
+                                                            <a class="page-link" href="?page={{ products.next_page_number }}">{% trans 'İleri' %}</a>
+                                                            </li>
+                                                            {% endif %}
+                                                            </ul>
+
+
+                                                    {% endif %}
+                                                        
+
+                                                </nav>
+                                                </div>
+                                                </div>
+                                                </div>
+                                                </div>
+                                                {% endblock content %}
+                                                
+                                                {% block extrajs %}
+                                                
+                                                <script>
+                                                    let currentQuestionIndex = 0;
+                                                    const questions = document.querySelectorAll('.question');
+                                                    const durumSelect = document.getElementById('durum');
+                                                    const yuzmeSeverMiSelect = document.getElementById('havuz');
+                                                    const yukseklikKorkusuSelect = document.getElementById('Yükseklik_korkusu');
+                                                    const kisiSayisiSelect = document.getElementById('kisi_sayisi');
+                                                    const citySelect = document.getElementById('city');
+                                                
+                                                    function showNextQuestion() {
+                                                        if (currentQuestionIndex === 0){
+                                                            document.getElementById('question-0').classList.remove('active');
+                                                            document.getElementById('question-1').classList.add('active');
+                                                            currentQuestionIndex++;
+                                                        }
+                                                        if (currentQuestionIndex === 1) {
+                                                            const selectedDurum = durumSelect.value;
+                                                            if (selectedDurum === 'Sale') {
+                                                                currentQuestionIndex++;
+                                                                document.getElementById('question-1').classList.remove('active');
+                                                                document.getElementById('question-2').classList.add('active');
+                                                            } else if (selectedDurum === 'Rent') {
+                                                                currentQuestionIndex++;
+                                                                document.getElementById('question-1').classList.remove('active');
+                                                                document.getElementById('question-3').classList.add('active');
+                                                            }
+                                                        } else if (currentQuestionIndex === 2 && durumSelect.value === 'Sale') {
+                                                            const yuzmeSeverMi = yuzmeSeverMiSelect.value;
+                                                            if (yuzmeSeverMi === 'True') {
+                                                                currentQuestionIndex++;
+                                                                document.getElementById('question-2').classList.remove('active');
+                                                                document.getElementById('question-4').classList.add('active');
+                                                                var nextquestion = document.getElementById("nextquestion");
+                                                                nextquestion.setAttribute("disabled", "true");
+                                                            } else if (yuzmeSeverMi === 'False') {
+                                                                currentQuestionIndex++;
+                                                                document.getElementById('question-2').classList.remove('active');
+                                                                document.getElementById('question-7').classList.add('active');
+                                                                
+                                                                var nextquestion = document.getElementById("nextquestion");
+                                                                nextquestion.setAttribute("disabled", "true");
+                                                                
+                                                                // var questioncontainer1 = document.getElementById("question-container1");
+                                                                // questioncontainer1.innerHTML= "sorular"
+                                                            }
+                                                        } else if (currentQuestionIndex === 2 && durumSelect.value === 'Rent') {
+                                                            currentQuestionIndex++;
+                                                            document.getElementById('question-3').classList.remove('active');
+                                                            document.getElementById('question-4').classList.add('active');
+                                                            var nextquestion = document.getElementById("nextquestion");
+                                                            nextquestion.setAttribute("disabled", "true");
+                                                        } else if (currentQuestionIndex === 3 && durumSelect.value === 'Rent') {
+                                                            filterResults();
+                                                        } else if (currentQuestionIndex < questions.length - 1) {
+                                                            questions[currentQuestionIndex].classList.remove('active');
+                                                            currentQuestionIndex++;
+                                                            questions[currentQuestionIndex].classList.add('active');
+                                                        }
+                                                    }
+                                                
+                                                    function showPreviousQuestion() {
+                                                        if (currentQuestionIndex > 0) {
+                                                            questions[currentQuestionIndex].classList.remove('active');
+                                                            currentQuestionIndex--;
+                                                            questions[currentQuestionIndex].classList.add('active');
+                                                        }
+                                                    }
+                                                </script>
+                                                {% endblock extrajs %}

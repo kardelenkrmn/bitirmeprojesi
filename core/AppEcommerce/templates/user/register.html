@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+
+{% block content %}
+    <div class="container" style="padding: 250px 0;">
+        <h1 class="text-center">{% trans 'Register Now' %}</h1>
+        <div class="row">
+            <form method="post" class="d-flex justify-content-center">
+                {% csrf_token %}
+                <div class="col-9">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">{% trans 'Name' %}</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">{% trans 'Last Name' %}</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="surname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">{% trans 'E-Mail Address' %}</label>
+                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" name="email" required >
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">{% trans 'Phone Number' %}</label>
+                        <input type="tel" class="form-control" id="tel" placeholder=" " name="tel" required>
+                    </div>
+                    <div class="mb-3" style="position: relative;">
+                        <label for="exampleFormControlInput1" class="form-label">{% trans 'Password' %}</label>
+                        <input type="password" class="form-control password" id="exampleFormControlInput1" placeholder="*********" name="password" required>
+                        <i class="bi bi-eye text-dark fs-4"
+                                style="position: absolute; top: 48%; right: 5px; cursor: pointer; display: none;"
+                                onclick="showPword()" id="bi-eye"></i>
+                            <i class="bi bi-eye-slash text-dark fs-4"
+                                style="position: absolute; top: 48%; right: 5px; cursor: pointer;" onclick="showPword()"
+                                id="bi-eye-slash"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary d-block ms-auto">{% trans 'Register Now' %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+    
+
+{% block extrajs %}
+<script>
+    const $input = document.querySelector('#tel');
+    $input.addEventListener('input', handleInput, false);
+
+    function handleInput(e) {
+        e.target.value = phoneMask(e.target.value);
+    }
+
+    function phoneMask(phone) {
+        return phone.replace(/\D/g, '')
+            .replace(/^(\d{3})(\d)/, '($1) -  $2')
+            .replace(/(\d{3})(\d{1,4})/, '$1 - $2')
+            .replace(/( \d{4})\d+?$/, '$1');
+    }
+</script>
+
+    
+
+
+<script>
+function showPword() {
+    var x = document.getElementsByClassName("password");
+    var eye = document.getElementById('bi-eye')
+    var eyeslash = document.getElementById('bi-eye-slash')
+    for (let i = 0; i < x.length; i++) {
+        if (x[i].type === "password") {
+            x[i].type = "text";
+        } else {
+            x[i].type = "password";
+        }
+    }
+    if (eye.style.display === "none") {
+        eye.style.display = "block"
+        eyeslash.style.display = "none"
+    }
+    else {
+        eye.style.display = "none"
+        eyeslash.style.display = "block"
+    }
+}
+</script>
+{% endblock extrajs %}

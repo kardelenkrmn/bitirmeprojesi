@@ -1,0 +1,224 @@
+{% load static %}
+{% load i18n %}
+
+        <!-- Navbar Start -->
+        <div class="container-fluid nav-bar bg-transparent">
+          <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
+              <a href="index.html" class="navbar-brand d-flex align-items-center text-center">
+                  
+                  <a  href="{% url 'index' %}"  ><h1 class="m-0 text-primary"  >HOME QUEST  </h1></a>
+              </a>
+              <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarCollapse">
+                  <div class="navbar-nav ms-auto">
+                      <a href="{% url 'index' %}" class="nav-item nav-link 
+                      {% if request.path == '/' %}
+                        active
+                      {% endif %}
+                        ">Home</a>
+                        
+                        {% if request.path == '/'  %}
+                        <a href="#list" class="nav-item nav-link">Property Listing</a>
+                        {% endif %}
+                          
+                      
+                      <a href="{% url 'category' %}" class="nav-item nav-link                      
+                       {% if request.path == '/category/' %}
+                          active
+                       {% endif %} 
+                       ">category</a>
+                  </div>
+                  {% if request.user.is_authenticated %}
+                  <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{request.user.username}}</a>
+                    <div class="dropdown-menu rounded-0 m-0">
+                      <a class="dropdown-item" href="{% url 'favorite' %}">My Favourites</a>      
+                      <a class="dropdown-item" href="{% url 'profil' %}">Profile</a>
+                      <a class="dropdown-item" href="{% url 'logout' %}">Log Out </a>
+                    </div>
+                </div>
+                        
+                  {% else %}
+                  <a href="{% url 'login' %}" class="btn btn-primary px-3 d-none d-lg-flex">Login</a>
+                  <a href="{% url 'register' %}" class="btn btn-primary px-3 d-none d-lg-flex ms-2">Register</a>
+                  {% endif %}
+
+
+              </div>
+          </nav>
+      </div>
+      <!-- Navbar End -->
+
+
+
+
+{% comment %} <header id="header" class="site-header header-scrolled position-fixed text-black bg-light">
+  <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <img src="{% static 'images/main-logo.png' %}" class="logo">
+      </a>
+      <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <svg class="navbar-icon">
+          <use xlink:href="#navbar-icon"></use>
+        </svg>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
+        <div class="offcanvas-header px-4 pb-0">
+          <a class="navbar-brand" href="{% url 'index' %}">
+            <img src="images/main-logo.png" class="logo">
+          </a>
+          <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul id="navbar" class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
+            
+            {% if request.path != "/" %}
+            <li class="nav-item">
+              <a class="nav-link me-4 
+              {% if request.path == '/' %}
+              active
+              {% endif %}
+                " href="{% url 'index' %}">{% trans 'Anasayfa' %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link me-4 
+              {% if request.GET.urlencode == 'cinsiyet=2' %}
+              active
+              {% endif %}
+              " href="{% url 'category' %}?brand='Detached'">{% trans 'Detached' %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link me-4
+              {% if request.GET.urlencode == 'cinsiyet=1' %}
+              active
+              {% endif %}
+              " href="{% url 'category' %}?brand='Building'">{% trans 'Building' %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link me-4               
+              {% if request.path == '/category/' and request.GET.urlencode != 'cinsiyet=2' and request.GET.urlencode != 'cinsiyet=1' %}
+              active
+              {% endif %}" href="{% url 'category' %}">{% trans 'category' %}</a>
+            </li>
+
+
+            {% else %}
+            <li class="nav-item">
+
+            </li>
+            <li class="nav-item">
+              <a class="nav-link me-4 
+              {% if request.path == 'index' %}
+              active
+              {% endif %}
+                " href="#billboard">{% trans 'Anasayfa' %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link me-4 
+              {% if request.GET.urlencode == 'cinsiyet=2' %}
+              active
+              {% endif %}
+              " href="#company-services">{% trans 'Detached' %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link me-4
+              {% if request.GET.urlencode == 'cinsiyet=1' %}
+              active
+              {% endif %}
+              " href="#mobile-products">{% trans 'Building' %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link me-4               
+              {% if request.path == '/category/' and request.GET.urlencode != 'cinsiyet=2' and request.GET.urlencode != 'cinsiyet=1' %}
+              active
+              {% endif %}" href="{% url 'category' %}">{% trans 'category' %}</a>
+            </li>
+
+            {% endif %}
+            <li class="nav-item dropdown">
+              <a class="dropdown-toggle" id="Dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="
+                  
+                  {% if request.path|slice:'1:3' == 'en' %}
+                    flag-united-kingdom
+                  {% else %}
+                    flag-turkey
+                  {% endif %}
+                    
+                  flag m-0">
+                </i>
+              </a>
+              {% if request.path|slice:'1:3' == 'en' %}
+                    EN
+                  {% else %}
+                    TR
+                  {% endif %}
+          
+              <ul class="dropdown-menu" aria-labelledby="Dropdown">
+                  <li>
+                      <a class="dropdown-item" href="{% url 'set-language' 'tr' %}"><i class="flag-turkey flag"></i>{% trans 'Türkçe' %} <i class="fa fa-check text-success ms-2"></i></a>
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                      <a class="dropdown-item" href="{% url 'set-language' 'en' %}"><i class="flag-united-kingdom flag"></i>{% trans 'İngilizce' %}</a>
+                  </li>
+              </ul>
+          </li>
+            
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <div class="user-items ps-5">
+                <ul class="d-flex justify-content-center align-items-center list-unstyled">
+
+
+
+                  <li class="nav-item dropdown">
+                    <a class="nav-link me-2 dropdown-toggle link-dark" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                      <svg class="user">
+                      <use xlink:href="#user"></use>
+                    </svg>
+                  </a>
+                    <ul class="dropdown-menu" style="position:absolute;top:50px;left:-120px;" >
+                      <li>
+                        <a class="dropdown-item" href="{% url 'favorite' %}">Favorilerim</a>                        
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="{% url 'profil' %}">Profil</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Çıkış Yap</a>
+                      </li>
+                    </ul>
+                  </li>
+                  
+
+            {% else %}
+            <li class="nav-item">
+              <div class="user-items ps-5">
+                <ul class="d-flex justify-content-end list-unstyled">
+                  <li class="pe-3">
+                    <a href="{% url 'login' %}">
+                      {% trans 'GİRİŞ YAP' %}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'register' %}">
+                      {% trans 'ÜYE OL' %}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+              
+            {% endif %}
+              
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+</header> {% endcomment %}

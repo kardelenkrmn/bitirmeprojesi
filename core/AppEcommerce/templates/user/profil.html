@@ -1,0 +1,517 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+
+
+
+{% block content %}
+    <div class="container" style="padding: 150px 0;">
+        <div class="row">
+          <div>
+            <button type="button" class="btn btn-primary d-block ms-auto" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              {% trans 'Add Home' %}
+            </button>
+            
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label"> Title </label>
+          <input type="text" class="form-control" name="title" >
+        </div>
+        <div class="mb-3">
+          <label class="form-label"> Building or Detached </label>
+          <select class="form-select" name="genel_durum" aria-label="Default select example">
+            <option selected>Select</option>
+            <option value="Building">Building</option>
+            <option value="Detached">Detached</option>        
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label"> For Sale or For Rent </label>
+          <select class="form-select" name="durum" aria-label="Default select example">
+            <option selected>Select</option>
+            <option value="Rent">Rent</option>
+            <option value="Sale">Sale</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label"> LOCATİON NERESİ  </label>
+          <select class="form-select" name="location" aria-label="Default select example">
+            <option selected>Select</option>
+            <option value="istanbul">İstanbul</option>
+            <option value="ankara">Ankara</option>        
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label"> Location </label>
+          <textarea name="konumm" class="form-control" ></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label"> Explanation </label>
+          <textarea name="açıklaması" class="form-control" ></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Price </label>
+          <input type="number" class="form-control" name="price" >
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Room Number </label>
+          <input type="text" class="form-control" name="room_number" >
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Number of Floors </label>
+          <input type="number" class="form-control" name="kat_number" >
+        </div>
+        <div class="mb-3">
+          <label class="form-label">m2 </label>
+          <input type="number" class="form-control" name="metre" >
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Is there an elevator ? </label>
+          <select class="form-select" name="asansör" aria-label="Default select example">
+            <option selected>Select</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Is there security ?</label>
+          <select class="form-select" name="güvenlik" aria-label="Default select example">
+            <option selected>Select</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Does it have a pool?</label>
+          <select class="form-select" name="havuz" aria-label="Default select example">
+            <option selected>Select</option>
+            <option value="1"{% if product.havuz == 1 %}
+            selected
+          {% endif %}>Yes</option>
+            <option value="0"{% if product.havuz == 0 %}
+            selected
+          {% endif %}>No</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Is there a car parking space ? </label>
+          <select class="form-select" name="otopark" aria-label="Default select example">
+            <option selected>Select</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Photo</label>
+          <input type="file" class="form-control" name="fotoğraf" multiple >
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" name="productsave" value="saveproduct"  class="btn btn-primary">Save</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+          </div>
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Personal Information</button>
+              <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Address</button>
+              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Change Password</button>
+              <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false">Houses</button>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">            <div class="col">
+              <div class="card" style="width: 100%;">
+                  <div class="card-body">
+                      <form method="post">
+                        {% csrf_token %}
+                          <div class="row">
+                              <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'Name' %}</label>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ profil.user.first_name }}" name="first_name">
+                                </div>
+                                <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'Last Name' %}</label>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ profil.user.last_name }}" name="last_name">
+                                </div>
+                          </div>
+                          <div class="row">
+                              <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'E-Mail Address' %}</label>
+                                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ profil.user.email }}" name="email">
+                                </div>
+                                <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'Phone Number' %}</label>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                  
+                                  {% if profil.phone_number %}
+                                  value="{{ profil.phone_number }}"
+                                  {% else %}
+                                  value=""
+                                  {% endif %}
+                                  name="phone_number" required>
+                                </div>
+                          </div>
+                          <div class="row">
+                              <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'Date of Birth' %}</label>
+                                  <input type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ profil.birtdate|date:'Y-m-d' }}" name="birtdate" required>
+                                </div>
+                              <div class="col"></div>
+                          </div>
+                          
+                          <button type="submit" class="btn btn-primary d-block ms-auto" name="btnsubmit" value="btnprofil">{% trans 'Update' %}</button>
+                        </form>
+                  </div>
+                </div>
+          </div></div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">            <div class="col">
+              <div class="card" style="width: 100%;">
+                  <div class="card-body">
+                      <form method="post">
+                        {% csrf_token %}
+                          <div class="row">
+                              <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'City' %}</label>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" 
+                                  
+                                  {% if adress.province %}
+                                  value="{{ adress.province }}"
+                                  {% endif %}
+                                    
+                                  name="province">
+                                </div>
+                                <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'District' %}</label>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                  {% if adress.district %}
+                                  value="{{ adress.district }}"
+                                  {% endif %}
+                                  name="district">
+                                </div>
+                          </div>
+                          <div class="row">
+                              <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'Neighbourhood ' %}</label>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                  {% if adress.neighbourhood %}
+                                  value="{{ adress.neighbourhood }}"
+                                  {% endif %} name="neighbourhood">
+                                </div>
+                          </div>
+                          <div class="row">
+                              <div class="col mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'Address' %}</label>
+                                  <textarea type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" cols="30" rows="10" name="adress">
+                                    {% if adress.adress %}
+                                  {{ adress.adress }}
+                                  {% endif %}
+                                  </textarea>
+                                </div>
+                          </div>
+                          
+                          <button type="submit" class="btn btn-primary d-block ms-auto" name="btnsubmit" value="btnadress">{% trans 'Update' %}</button>
+                        </form>
+                  </div>
+                </div>
+          </div></div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">            <div class="col">
+              <div class="card" style="width: 100%;">
+                  <div class="card-body">
+                      <form method="post">
+                        {% csrf_token %}
+                          <div class="row">
+                              <div class="mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'Old Password' %}</label>
+                                  <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="oldpass">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'New Password' %}</label>
+                                  <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="newpass">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="exampleInputEmail1" class="form-label">{% trans 'New Password(Again)' %}</label>
+                                  <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="rnewpass">
+                                </div>
+                          </div>
+                          
+                          <button type="submit" class="btn btn-primary d-block ms-auto" name="btnsubmit" value="btnpass">{% trans 'Update' %}</button>
+                        </form>
+                  </div>
+                </div>
+          </div></div>
+            <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">  
+              <div class="row">             
+              {% for product in  evlerim %}
+                          
+              <div class="col-lg-4 mb-4 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
+                  <div class="property-item rounded overflow-hidden">
+                      <div class="position-relative overflow-hidden">
+                          <a href=""><img style="height: 400px;" class="img-fluid" src="{{product.image.url}}" alt=""></a>
+                          <a class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3" href="{% url 'product_detail' product.id %}" >Go to Details</a>
+                          <form method="post" enctype='multipart/form-data'>
+                            {% csrf_token %}
+
+                            <button type="button" class="btn btn-primary position-absolute " style="left: 280px; top:150px;" data-bs-toggle="modal" data-bs-target="#productedit{{product.id}}">
+                              Organise  House
+                            </button>
+
+                            <div class="modal fade" id="productedit{{product.id}}" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+
+                            
+                                  <div class="modal-body">
+                                    <div class="mb-3">
+                                      <input type="hidden" class="form-control" name="ürünid" value="{{product.id}}" >
+                                    </div>
+
+                                    <div class="mb-3">
+                                      <label class="form-label"> Title </label>
+                                      <input type="text" class="form-control" name="title" value="{{product.title}}" >
+
+                                    </div>
+
+                                    <div class="mb-3">
+                                      <label class="form-label"> Building or Detached </label>
+                                      <select class="form-select" name="genel_durum" aria-label="Default select example" >
+                                        <option selected>genel durumu nedir</option>
+                                        <option value="Building" {% if product.brand == "Building" %}
+                                          selected
+                                        {% endif %}>Building</option>
+                                        <option value="Detached" {% if product.brand == "Building" %}
+                                        selected
+                                      {% endif %}>Detached</option>        
+                                      </select>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label"> For Sale or For Rent </label>
+                                      <select class="form-select" name="durum" aria-label="Default select example">
+                                        <option selected>What is the status ?</option>
+                                        <option value="Rent" {% if product.durum == "Rent" %}
+                                        selected
+                                      {% endif %}>Rent</option>
+                                        <option value="Sale" {% if product.durum == "Sale" %}
+                                        selected
+                                      {% endif %}>Sale</option>
+                                      </select>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label"> Which city? </label>
+                                      <select class="form-select" name="location" aria-label="Default select example">
+                                        <option selected>What is the general situation ?</option>
+                                        <option value="istanbul" {% if product.location == "istanbul" %}
+                                        selected
+                                      {% endif %} >İstanbul</option>
+                                        <option value="ankara" {% if product.location == "sankara" %}
+                                        selected
+                                      {% endif %} >Ankara</option>        
+                                      </select>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">  Where is the location ?  </label>
+                                      <textarea name="konumm" class="form-control"  > {{product.adres}} </textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label"> Description </label>
+                                      <textarea name="açıklaması" class="form-control" > {{product.description}} </textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">Price </label>
+                                      <input type="number" class="form-control" name="price" value="{{product.price}}" >
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">Room Number </label>
+                                      <input type="text" class="form-control" name="room_number" value="{{product.room_number}}" >
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">Number of Storeys </label>
+                                      <input type="number" class="form-control" name="kat_number" value="{{product.kat_sayısı}}" >
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">m²: </label>
+                                      <input type="number" class="form-control" name="metre" value="{{product.metre}}" >
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">Is there an elevator ?</label>
+                                      <select class="form-select" name="asansör" aria-label="Default select example">
+                                        <option selected>What is the status ?</option>
+                                        <option value="1"{% if product.asansor == 1 %}
+                                        selected
+                                      {% endif %}>Yes</option>
+                                        <option value="0"{% if product.asansor == 0 %}
+                                        selected
+                                      {% endif %}>No</option>
+                                      </select>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">Is there security ? </label>
+                                      <select class="form-select" name="güvenlik" aria-label="Default select example">
+                                        <option selected>Select</option>
+                                        <option value="1"{% if product.güvenlik == 1 %}
+                                        selected
+                                      {% endif %}>Yes</option>
+                                        <option value="0"{% if product.güvenlik == 0 %}
+                                        selected
+                                      {% endif %}>No</option>
+                                      </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                      <label class="form-label">Is there a pool ? </label>
+                                      <select class="form-select" name="havuz" aria-label="Default select example">
+                                        <option selected>Select</option>
+                                        <option value="1"{% if product.havuz == 1 %}
+                                        selected
+                                      {% endif %}>Yes</option>
+                                        <option value="0"{% if product.havuz == 0 %}
+                                        selected
+                                      {% endif %}>No</option>
+                                      </select>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">Is there a car parking space ? </label>
+                                      <select class="form-select" name="otopark" aria-label="Default select example">
+                                        <option selected>Select</option>
+                                        <option value="1"{% if product.otopark == 1 %}
+                                        selected
+                                      {% endif %}>Yes</option>
+                                        <option value="0"{% if product.otopark == 0 %}
+                                        selected
+                                      {% endif %}>No</option>
+                                      </select>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label class="form-label">Photo</label>
+                                      <input type="file" class="form-control" name="fotoğraf" multiple  >
+                                    </div>
+                            
+                                  </div>
+                            
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="productedit" value="editproduct"  class="btn btn-primary">Save</button>
+                                  </div>
+                                
+                                </div>
+                              </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                          <!-- Button trigger modal -->
+                              <button type="button" class="btn btn-primary position-absolute " style="left: 280px; top:20px;" data-bs-toggle="modal" data-bs-target="#productdelete{{product.id}}">
+                                Delete House
+                              </button>
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="productdelete{{product.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      Are you sure you want to delete the house?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Give Up</button>
+                                      <input type="hidden" name="delete" value="{{product.id}}">
+                                      <button type="submit" class="bg-danger rounded text-white  m-4 py-1 px-3" name="btndelete" value="delete" >Wipe The House</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          </form>
+                          <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{product.brand}}</div>
+                          <form method="post">
+                            {% csrf_token %}
+                            
+
+
+
+
+
+                            <!-- favorilerin içinde girişli kullanıcı var mı onu kontrol ediyor. -->
+                            {% if request.user in product.favori.all %}
+                            <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                              <i class="fa-solid fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </button>
+                            {% else %}
+                            
+                            {% if request.user.is_authenticated %}
+                            <button type="button" class="position-absolute top-0 end-0 btnfavori" data-product-id="{{ product.id }}">
+                              <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </button>
+                          {% else %}
+                          <a href="{% url 'login' %}" type="button" class="position-absolute top-0 end-0 btn" data-product-id="{{ product.id }}">
+                            <i class="fa-regular fa-heart fs-5" id="heart{{ product.id }}"></i>
+                          </a>
+                            {% endif %}
+                              
+                            
+                            {% endif %}
+                              
+  
+                        </form>
+                      </div>
+                      <div class="p-4 pb-0">
+                          <h5 class="text-primary mb-3">{{product.price|intcomma}}  TL</h5>
+                          <a class="d-block h5 mb-2" href="">{{product.title}}</a>
+                          <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{product.location}}</p>
+                      </div>
+                      <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{product.metre}} m²</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{product.room_number}}</small>
+                      </div>
+                  </div>
+              </div>
+
+              {% endfor %}  </div>
+            </div> 
+          </div>
+
+        </div>
+        <div class="row mt-5">
+
+        </div>
+        <div class="row mt-5">
+        </div>
+    </div>
+{% endblock content %}
+    
